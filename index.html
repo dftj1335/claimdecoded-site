@@ -135,6 +135,43 @@ h1 .line{display:block}
 .btn.primary:hover{background:var(--green-soft);color:#021004}
 .btn .k{opacity:.7;font-weight:500}
 
+/* VSL video */
+.hero-copy,.hero-actions{min-width:0}
+.hero-actions .term{margin-top:28px}
+.vsl{margin:0;justify-self:center;width:min(100%,380px,calc(78svh * 9 / 16));min-width:260px}
+.vsl-cap{margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.vsl-cap span{color:var(--green)}
+.vsl-frame{
+  position:relative;aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#000;
+  border:1px solid var(--line-strong);
+  box-shadow:0 0 0 1px rgba(0,0,0,.5),0 0 40px rgba(0,255,65,.12),0 24px 70px rgba(0,0,0,.6);
+}
+.vsl-frame video{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+.vsl-play{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:16px;
+  padding:22px 20px;border:0;cursor:pointer;text-align:left;font-family:var(--mono);color:var(--text);
+  background:linear-gradient(180deg,rgba(3,6,4,0) 40%,rgba(3,6,4,.55) 66%,rgba(3,6,4,.92) 100%);
+}
+.vsl-hook{font-size:clamp(26px,7vw,32px);font-weight:800;line-height:1.05;letter-spacing:-.01em;color:var(--green);text-shadow:0 0 18px rgba(0,255,65,.35),0 2px 8px rgba(0,0,0,.8)}
+.vsl-btn{
+  display:inline-flex;align-items:center;gap:10px;min-height:48px;padding:12px 20px 12px 16px;border-radius:var(--radius);
+  background:var(--green);color:#021004;font-size:14.5px;font-weight:700;letter-spacing:.02em;
+  box-shadow:0 0 24px rgba(0,255,65,.35);transition:background .15s,transform .15s;
+}
+.vsl-btn svg{width:20px;height:20px;fill:currentColor}
+.vsl-play:hover .vsl-btn{background:var(--green-soft);transform:translateY(-1px)}
+.vsl-play:focus-visible{outline-offset:-4px}
+.vsl.playing .vsl-play{display:none}
+.vsl-end{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:24px;
+  background:rgba(3,6,4,.9);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+}
+.vsl-end[hidden]{display:none}
+.vsl-end p{margin:0 0 8px;font-size:24px;font-weight:800;line-height:1.15;color:var(--green)}
+.vsl-end .btn{width:100%}
+.vsl-replay{margin-top:4px;background:none;border:0;color:var(--muted);font-family:var(--mono);font-size:13px;cursor:pointer;padding:8px;align-self:center}
+.vsl-replay:hover{color:var(--green)}
+
 /* terminal card */
 .term{
   border:1px solid var(--line);border-radius:6px;background:linear-gradient(180deg,var(--panel-2),var(--panel));
@@ -196,7 +233,10 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;font-size:13px;color
 }
 @media (min-width:900px){
   .hero{padding:88px 0 64px}
-  .hero-grid{grid-template-columns:1.15fr .85fr;align-items:center;gap:48px}
+  .hero-grid{grid-template-columns:1fr 380px;grid-template-areas:"copy video" "actions video";align-items:start;column-gap:64px;row-gap:0}
+  .hero-copy{grid-area:copy;align-self:end}
+  .hero-actions{grid-area:actions}
+  .vsl{grid-area:video;align-self:center;width:380px}
   .sec{padding:72px 0}
   .sec-split{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:start}
   .sec-split .sec-head{position:sticky;top:96px}
@@ -222,7 +262,7 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;font-size:13px;color
 <main id="top">
   <section class="hero">
     <div class="wrap hero-grid">
-      <div>
+      <div class="hero-copy">
         <p class="eyebrow"><span>//</span> independent property inspections</p>
         <h1 id="title" aria-label="Claim Decoded"><span class="line" data-text="Claim">Claim</span><span class="line" data-text="Decoded">Decoded</span></h1>
         <p class="lede">Independent property inspections, Xactimate estimates, and photo documentation.</p>
@@ -231,11 +271,32 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;font-size:13px;color
           <li>Southern WV</li>
           <li>WV Eastern Panhandle</li>
         </ul>
+      </div>
+
+      <figure class="vsl" aria-label="Video: Don't file and find out">
+        <figcaption class="vsl-cap"><span>//</span> watch first · 2 min</figcaption>
+        <div class="vsl-frame" id="vsl">
+          <video id="vsl-video" playsinline preload="metadata" poster="claim-decoded-vsl-poster.jpg" width="1080" height="1920">
+            <source src="claim-decoded-vsl.mp4" type="video/mp4">
+          </video>
+          <button class="vsl-play" id="vsl-play" type="button" aria-label="Play video: Don't file and find out">
+            <span class="vsl-hook">Don't file<br>and find out.</span>
+            <span class="vsl-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Watch · 2:07</span>
+          </button>
+          <div class="vsl-end" id="vsl-end" hidden>
+            <p>Know before you file.</p>
+            <a class="btn primary" href="#call">Book a 1-on-1 call</a>
+            <a class="btn" href="#inspect">Request an inspection</a>
+            <button class="vsl-replay" id="vsl-replay" type="button">↺ Replay</button>
+          </div>
+        </div>
+      </figure>
+
+      <div class="hero-actions">
         <div class="cta">
           <a class="btn primary" href="#call"><span class="k">[1]</span> Book a 1-on-1 call</a>
           <a class="btn" href="#inspect"><span class="k">[2]</span> Request an inspection</a>
         </div>
-      </div>
 
       <div class="term" role="note" aria-label="How I work">
         <div class="term-head"><i></i><i></i><i></i><span>stance.txt</span></div>
@@ -244,6 +305,7 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;font-size:13px;color
           <p>I'm independent. I don't work for your insurance company, your contractor, or anyone else in your claim, and I have no stake in how it turns out.</p>
           <p>I scope the damage and point out what I find. <strong>You decide what happens next</strong>: call a contractor, file a claim, or neither.</p>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -406,6 +468,24 @@ footer{border-top:1px solid var(--line);padding:36px 0 44px;font-size:13px;color
     var io2=new IntersectionObserver(function(es){ if(es.some(function(e){return e.isIntersecting;})){ loadTally(); io2.disconnect(); } },{rootMargin:'600px 0px'});
     io2.observe(tf);
   } else { loadTally(); }
+
+  /* VSL player: big play overlay, native controls once playing, end card with booking buttons */
+  var vsl = document.querySelector('.vsl'), vid = document.getElementById('vsl-video'),
+      playBtn = document.getElementById('vsl-play'), endCard = document.getElementById('vsl-end');
+  if(vid){
+    function start(){
+      endCard.hidden = true; vsl.classList.add('playing'); vid.controls = true; vid.muted = false;
+      var p = vid.play(); if(p && p.catch) p.catch(function(){ vsl.classList.remove('playing'); });
+    }
+    playBtn.addEventListener('click', start);
+    document.getElementById('vsl-replay').addEventListener('click', function(){ vid.currentTime = 0; start(); });
+    vid.addEventListener('ended', function(){
+      vid.controls = false;
+      if(document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+      if(vid.webkitDisplayingFullscreen && vid.webkitExitFullscreen) vid.webkitExitFullscreen();
+      endCard.hidden = false;
+    });
+  }
 
   document.getElementById('yr').textContent = new Date().getFullYear();
 })();
