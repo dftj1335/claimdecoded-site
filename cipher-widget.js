@@ -20,8 +20,10 @@
   var MAX_TOTAL_BYTES = 4 * 1024 * 1024; // matches the Worker's ~4 MB cap
   var FILE_TYPES = ["application/pdf", "image/jpeg", "image/png", "image/webp"];
   var GREETING =
-    "I'm CIPHER. Ask me about deductibles, depreciation, building codes, or how claims work. " +
-    "General info only \u2014 for your house or your policy, book a call or an inspection.";
+    "I'm CIPHER. Ask me about deductibles, depreciation, building codes, or how claims work.\n" +
+    "Heads up: I share general education only. I can't tell you whether something is covered or what a carrier will pay \u2014 " +
+    "only your policy and your carrier decide that. For your house or your policy, book a call or an inspection.";
+  var DISCLAIMER = "General education only \u2014 not legal advice or a coverage decision. Your policy and carrier decide coverage.";
 
   var history = []; // {role, content}
   var busy = false;
@@ -82,6 +84,7 @@
     ".note{font-size:11.5px;color:#7fbf95;margin:8px 0 0}",
     ".go{width:100%;margin-top:12px}",
     ".result{margin-top:14px}",
+    ".disc{display:block;margin-top:8px;padding-top:6px;border-top:1px solid #0f3d1f;font-size:10.5px;color:#5f8f6f;font-style:italic}",
     "@media (max-width:480px){.panel{right:8px;left:8px;width:auto;max-width:none;bottom:76px;height:calc(100vh - 96px);max-height:none}",
     ".fab{right:12px;bottom:12px}}"
   ].join("");
@@ -192,6 +195,7 @@
       '<div class="drop" tabindex="0" role="button">Tap to choose files or drop them here</div>' +
       '<input type="file" multiple accept="application/pdf,image/jpeg,image/png,image/webp" hidden>' +
       '<ul class="files"></ul>' +
+      '<p class="note">This explains what your pages say in plain English. It is not a coverage decision or legal advice \u2014 your carrier and policy decide what is covered. Confirm anything important with your agent.</p>' +
       '<p class="note">Cover or crop out policy numbers and your address if you can. Files are sent to be read once and are not saved.</p>' +
       '<button class="btn go" disabled>Decode my policy</button>' +
       '<div class="result"></div>' +
@@ -199,7 +203,7 @@
 
       '<div class="cta"><a target="_blank" rel="noopener" href="' + esc(CONFIG.callUrl) + '">Book a call</a>' +
       '<a target="_blank" rel="noopener" href="' + esc(CONFIG.inspectionUrl) + '">Request inspection</a></div>' +
-      '<div class="foot">General information only \u2014 not legal advice or a coverage decision. Call/text ' + esc(CONFIG.phone) + "</div>" +
+      '<div class="foot">Claim Decoded inspects, estimates, and documents \u2014 we don\'t negotiate claims. Call/text ' + esc(CONFIG.phone) + "</div>" +
       "</div>";
 
     var $ = function (s) { return root.querySelector(s); };
@@ -243,7 +247,7 @@
       var wait = addMsg("bot", '<span class="dots">Decoding</span>');
       post("/chat", { messages: history.slice(-16) })
         .then(function (reply) {
-          wait.innerHTML = render(reply);
+          wait.innerHTML = render(reply) + '<span class="disc">' + esc(DISCLAIMER) + "</span>";
           history.push({ role: "assistant", content: reply });
         })
         .catch(function (e) {
@@ -303,7 +307,7 @@
           if (total > MAX_TOTAL_BYTES) throw new Error("That upload is too large. Try just the declarations page and endorsement pages, or smaller photos.");
           return post("/decode", { files: files, state: st.value });
         })
-        .then(function (reply) { result.innerHTML = '<div class="msg bot" style="max-width:100%">' + render(reply) + "</div>"; })
+        .then(function (reply) { result.innerHTML = '<div class="msg bot" style="max-width:100%">' + render(reply) + '<span class="disc">' + esc(DISCLAIMER) + "</span></div>"; })
         .catch(function (e) { result.innerHTML = '<div class="msg err">' + render(e.message) + "</div>"; })
         .then(function () { busy = false; go.disabled = !picked.length; });
     });
