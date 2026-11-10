@@ -188,14 +188,14 @@
       '<button class="btn send">Send</button></div></div>' +
 
       '<div class="view" data-v="dec"><div class="dec">' +
-      "<div>Upload your declarations page (and any endorsement pages). You'll get a plain-English breakdown of your coverages, limits, deductibles, and endorsements.</div>" +
+      "<div>Upload your declarations page (and any endorsement pages). You'll get a plain list of the limits, deductibles, endorsements, and exclusions printed on your pages, with the deductible math done for you.</div>" +
       '<label for="cst">Your state</label>' +
       '<select id="cst"><option value="TX">Texas</option><option value="WV">West Virginia</option><option value="">Other</option></select>' +
       '<label>Your pages (PDF, JPG, PNG, WEBP \u00b7 up to ' + MAX_FILES + ")</label>" +
       '<div class="drop" tabindex="0" role="button">Tap to choose files or drop them here</div>' +
       '<input type="file" multiple accept="application/pdf,image/jpeg,image/png,image/webp" hidden>' +
       '<ul class="files"></ul>' +
-      '<p class="note">This explains what your pages say in plain English. It is not a coverage decision or legal advice \u2014 your carrier and policy decide what is covered. Confirm anything important with your agent.</p>' +
+      '<p class="note">This only lists what is printed and does the math. It does not interpret your policy and is not a coverage decision or legal advice. Want it explained? Book a call.</p>' +
       '<p class="note">Cover or crop out policy numbers and your address if you can. Files are sent to be read once and are not saved.</p>' +
       '<button class="btn go" disabled>Decode my policy</button>' +
       '<div class="result"></div>' +
